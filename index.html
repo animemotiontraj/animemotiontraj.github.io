@@ -1,0 +1,602 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Trajectory-guided Anime Video Synthesis via Effective Motion Learning</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+
+<link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+      rel="stylesheet">
+      <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="./static/css/bulma.min.css">
+<link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+<link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+<link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+<link rel="stylesheet" href="./static/css/index.css">
+<!-- <link rel="icon" href="./static/icon.svg"> -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script defer src="./static/js/fontawesome.all.min.js"></script>
+<script src="./static/js/bulma-carousel.min.js"></script>
+<script src="./static/js/bulma-slider.min.js"></script>
+<script src="./static/js/index.js"></script>
+</head>
+
+<body>
+	<button style="position: fixed;right: 15px;top:  50%;height: 100px;width: 140px; font-size: 20px;" type="button"><a href="#top">Back to top</a></button> 
+<div class="page-container">
+  <!-- <h1 align="center">DynamiCrafter:<br>Animating Open-domain Images with Video Diffusion Priors</h1> -->
+  
+  
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <!-- <img src="static/logo_long.png" style="height:90px"></img> -->
+            <h1 class="title is-1 publication-title">Trajectory-guided Anime Video Synthesis via Effective Motion Learning</h1>
+            <div class="column is-full_width">
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <span>Anonymous</span>
+            </div>
+            
+            <div class="column has-text-centered">
+            <div class="publication-links">
+                <!-- <span class="link-block">
+                    <a href="https://arxiv.org/abs/xxxxx"
+                    class="external-link button is-normal is-rounded">
+                    <span>Paper</span>
+                    </a>
+                </span> -->
+                <span class="link-block">
+                    <a href="#abstract"
+                    class="external-link button is-normal is-rounded">
+                    <span>Abstract</span>
+                    </a>
+                </span>
+
+                <span class="link-block">
+                    <a href="#method"
+                    class="external-link button is-normal is-rounded">
+                    <span>Method</span>
+                    </a>
+                </span>
+                <span class="link-block">
+                  <a href="#comparisons"
+                  class="external-link button is-normal is-rounded">
+
+                  <span>Comparisons</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                    <a href="#ablation"
+                    class="external-link button is-normal is-rounded">
+                    <span>Ablation</span>
+                    </a>
+                </span>
+                <span class="link-block">
+                  <a href="#process"
+                  class="external-link button is-normal is-rounded">
+
+                  <span>Intermediate Results</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#unconditional"
+                  class="external-link button is-normal is-rounded">
+                  <span>Unconditional</span>
+                  </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Paper abstract -->
+  <section class="section hero">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <h2 class="title is-3" id="abstract">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Cartoon and anime motion production is traditionally labor-intensive, requiring detailed animatics and extensive in-betweening from keyframes. To streamline this process, we propose a novel framework that synthesizes motion directly from a single colored keyframe, guided by user-provided trajectories. Addressing the limitations of prior methods, which struggle with anime due to reliance on optical flow estimators and models trained on natural videos, we introduce an efficient motion representation specifically adapted for anime, leveraging CoTracker to capture sparse frame-to-frame tracking effectively. 
+To achieve our objective, we design a two-stage learning mechanism: the first stage predicts sparse motion from input frames and trajectories, generating a motion preview sequence via explicit warping; the second stage refines these previews into high-quality anime frames by fine-tuning ToonCrafter, an anime-specific video diffusion model. 
+Experimental results demonstrate significant improvements in animating still frames, achieving better alignment with user-provided trajectories and more natural motion patterns while preserving anime stylization and visual quality. Our method also supports versatile applications, including motion manga generation and 2D vector graphic animations.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End paper abstract -->
+
+  <!-- Paper method -->
+  <section class="section hero">
+    <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+        <div class="column">
+            <h2 class="title is-3" id="method">Method</h2>
+            <div class="content has-text-justified">
+              <img src="static/overview.png" alt="" width="1000" class="p-3" />
+            <p class="">
+              We introduce an efficient sparse motion representation
+              that records displacements on a sparse array of keypoints. Using a
+              high-quality point-based tracker such as CoTracker, this representation effectively captures most frame-to-frame
+              tracking and morphing profiles in anime. With this representation, we then develop our framework
+              in two stages. In the first stage, we propose a video diffusion model
+              to predict the motion representation directly from the conditions,
+              including the input frame, user trajectories, and text prompts. To
+              support training, we also propose a large-scale anime motion dataset
+              with a novel motion sampling procedure to approximate user trajectories from CoTracker motion estimations. At the end of this
+              stage, we warp the initial frame with the model predictions to construct the subsequent frames as a motion preview. Although this
+              sequence may contain distortions and uncertainties, it still serves
+              as an explicit motion prior for the next stage. Thus, in the second
+              stage, we leverage the generative prior of an anime-specific video
+              diffusion model, ToonCrafter, to refine the motion
+              preview into a high-quality anime video clip. Specifically, we finetune the model to interpret motion guidance implicitly from the
+              user-provided trajectories and explicitly from the warped motion
+              preview. This approach enables the synthesis of complete anime frames with improved details, realistic and trajectory-conforming
+              motion, and robust handling of occlusions.
+            </p>
+            </div>
+        </div>
+        </div>
+    </div>
+    </section>
+    <!-- End paper method -->
+
+  <!-- Results Part1: comparisons -->
+  <section class="section hero">
+    <!------------------ BEGIN SECTION ------------------>
+    <!-- <p>&nbsp;</p> -->
+    <!-- <hr> -->
+    <h2 class="title is-3" id="comparisons" align="center">Visual Comparison</h2>
+
+    <table class="mt-3 is-full_width align-center">
+      <tbody>
+        
+        <tr>
+          <th style="font-size: 16px">Input</th>
+          <th style="font-size: 16px">Ours</th>
+          <th style="font-size: 16px">MotionCtrl</th>
+          <th style="font-size: 16px">DragNUWA</th>
+          <th style="font-size: 16px">Motion-I2V</th>
+        </tr>
+        
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_01.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/01.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/01.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/01.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/01.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A man in a red jacket holding a cell phone to his ear</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_02.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/02.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/02.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/02.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/02.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A person in a kitchen preparing food on a stove</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_03.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/03.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/03.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/03.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/03.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A cartoon character standing in front of a bunch of bottles</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_10.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/10.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/10.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/10.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/10.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A girl with a red bow on her head and a blue sky</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_16.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/16.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/16.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/16.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/16.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A cartoon character holding a piece of paper</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_17.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/17.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/17.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/17.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/17.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A woman with a sword standing next to another woman</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_18.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/18.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/18.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/18.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/18.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>The sun shines brightly through the branches of a tree</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_20.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/20.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/20.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/20.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/20.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A group of men riding on the backs of horses</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_23.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/23.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/23.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/23.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/23.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A cartoon character sitting at a table with a plate of food</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_04.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/04.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/04.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/04.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/04.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A white jellyfish floating on top of a blue ocean</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_14.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/14.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/14.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/14.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/14.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A man and a boy standing in front of a green background</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_06.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/06.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/06.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/06.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/06.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>Two women sitting at a table in a restaurant</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_07.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/07.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/07.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/07.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/07.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>An anime character is throwing a baseball bat</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_08.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/08.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/08.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/08.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/08.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A man in a blue suit is standing in front of a door</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_09.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/09.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/09.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/09.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/09.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>Batman and the joker</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_15.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/15.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/15.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/15.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/15.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A cartoon of a woman holding a sword in front of a dragon</i></th>
+        </tr>
+
+      </tbody>
+    </table>
+  </section>
+  <!-- End Results Part1-->
+
+  <!-- Results Part2: Ablation -->
+  <section class="section hero">
+    <!------------------ BEGIN SECTION ------------------>
+    <!-- <p>&nbsp;</p> -->
+    <!-- <hr> -->
+    <h2 class="title is-3" id="ablation" align="center">Ablation</h2>
+
+    <table width="1000" align="center" style="margin-top: 30px;">
+      <tbody>
+        <tr>
+          <th style="font-size: 16px">Input</th>
+          <th style="font-size: 16px">Ours Full</th>
+          <th style="font-size: 16px">W/o SAM</th>
+          <th style="font-size: 16px">W/o traj pos embedding</th>
+          <th style="font-size: 16px">Second Stage Only</th>
+          <th style="font-size: 16px">FFT representation <br/> (E.g., Generative Image Dynamics)</th>
+        </tr>
+        <tr>
+          <th><img class="input_image_ablation" src="assets/webpage_vids_vistraj/traj_with_mask_00.png"/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/ours/00.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wosam/00.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wotrajcond/00.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/motionctrl/00.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_fft/00.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="6" style="font-size: 14px; "><i>A cartoon of a man and a cow</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_ablation" src="assets/webpage_vids_vistraj/traj_with_mask_11.png"/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/ours/11.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wosam/11.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wotrajcond/11.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/motionctrl/11.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_fft/11.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="6" style="font-size: 14px; "><i>A girl in a white shirt standing next to a ladder</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_ablation" src="assets/webpage_vids_vistraj/traj_with_mask_16.png"/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/ours/16.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wosam/16.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wotrajcond/16.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/motionctrl/16.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_fft/16.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="6" style="font-size: 14px; "><i>A cartoon character holding a piece of paper</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_ablation" src="assets/webpage_vids_vistraj/traj_with_mask_17.png"/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/ours/17.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wosam/17.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wotrajcond/17.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/motionctrl/17.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_fft/17.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="6" style="font-size: 14px; "><i>A woman with a sword standing next to another woman</i></th>
+        </tr>
+
+      </tbody>
+    </table>
+  </section>
+  <!-- End Results Part2-->
+
+
+  <!-- Results Part3: process -->
+  <section class="section hero">
+    <!------------------ BEGIN SECTION ------------------>
+    <!-- <p>&nbsp;</p> -->
+    <!-- <hr> -->
+    <h2 class="title is-3" id="process" align="center">Intermediate Results</h2>
+
+    <table width="1000" align="center" style="margin-top: 30px;">
+      <tbody>
+        <tr>
+          <th style="font-size: 16px;">Input</th>
+          <th style="font-size: 16px">First Stage Predicted Motion</th>
+          <th style="font-size: 16px">Warped Frames</th>
+          <th style="font-size: 16px">Final Output</th>
+        </tr>
+        <tr>
+          <th><img class="input_image_intermediate" src="assets/webpage_vids_vistraj/traj_with_mask_00.png"/></th>
+          <th><video  class="input_image_intermediate" src="assets/intermediates/00_pred_motion.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_intermediate" src="assets/intermediates/00_warped.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_intermediate" src="assets/webpage_vids_vistraj/ours/00.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="4" style="font-size: 14px; "><i>A cartoon of a man and a cow</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_intermediate" src="assets/webpage_vids_vistraj/traj_with_mask_11.png"/></th>
+          <th><video  class="input_image_intermediate" src="assets/intermediates/11_pred_motion.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_intermediate" src="assets/intermediates/11_warped.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_intermediate" src="assets/webpage_vids_vistraj/ours/11.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="4" style="font-size: 14px; "><i>A girl in a white shirt standing next to a ladder</i></th>
+        </tr>
+
+      </tbody>
+    </table>
+  </section>
+  <!-- End Results Part3-->
+
+  <!-- Results Part4: unconditional -->
+  <section class="section hero">
+    <!------------------ BEGIN SECTION ------------------>
+    <!-- <p>&nbsp;</p> -->
+    <!-- <hr> -->
+    <h2 class="title is-3" id="unconditional" align="center">Unconditional Cases</h2>
+
+    <table width="1000" align="center" style="margin-top: 30px;">
+      <tbody>
+        <tr>
+          <th style="font-size: 16px;">Input</th>
+          <th style="font-size: 16px">Output</th>
+        </tr>
+
+        <tr>
+          <th><img class="input_uncond" src="assets/unconditional/03.png"/></th>
+          <th><video  class="input_uncond" src="assets/unconditional/03.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="4" style="font-size: 14px; "><i>A girl in a white shirt and black hair</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_uncond" src="assets/unconditional/01.png"/></th>
+          <th><video  class="input_uncond" src="assets/unconditional/01.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="4" style="font-size: 14px; "><i>A person sitting on a star with a laptop</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_uncond" src="assets/unconditional/02.png"/></th>
+          <th><video  class="input_uncond" src="assets/unconditional/02.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="4" style="font-size: 14px; "><i>A drawing of a woman with long hair</i></th>
+        </tr>
+
+      </tbody>
+    </table>
+  </section>
+  <!-- End Results Part4-->
+
+</div>
+
+<script>
+  const videoContainer = document.querySelector('.video-container');
+  const video = document.querySelector('video');
+  const hoverImage = document.querySelector('.hover-image');
+  const caption = document.querySelector('.caption');
+
+  videoContainer.addEventListener('mouseenter', () => {
+      video.pause();
+      hoverImage.style.display = 'block';
+      caption.style.display = 'block';
+  });
+
+  videoContainer.addEventListener('mouseleave', () => {
+      video.play();
+      hoverImage.style.display = 'none';
+      caption.style.display = 'none';
+  });
+
+  // for nerfies template
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag('js', new Date());
+
+  gtag('config', 'G-PYVRSFMDRL');
+
+  // for carousel
+  window.addEventListener('DOMContentLoaded', (event) => {
+        const videoWrappers = document.querySelectorAll('.video-wrapper');
+      
+        videoWrappers.forEach(wrapper => {
+          const defaultVideo = wrapper.querySelector('.default-video');
+          const aspectRatio = defaultVideo.videoWidth / defaultVideo.videoHeight;
+          const height = wrapper.offsetWidth / aspectRatio;
+      
+          wrapper.style.height = `${height}px`;
+      
+          wrapper.addEventListener('mouseenter', () => {
+            defaultVideo.pause();
+            hoverVideo.play();
+          });
+      
+          wrapper.addEventListener('mouseleave', () => {
+            defaultVideo.play();
+            hoverVideo.pause();
+          });
+        });
+      }); 
+      $(document).ready(function() {
+        var carouselItems = $('.carousel .item');
+        var numItems = carouselItems.length;
+        var numVideos = 5;
+        var currentIndex = 0;
+    
+        $('.carousel').on('click', function() {
+          currentIndex++;
+          if (currentIndex + numVideos <= numItems) {
+            carouselItems.removeClass('active');
+            carouselItems.slice(currentIndex, currentIndex + numVideos).addClass('active');
+          } else {
+            currentIndex = 0;
+            carouselItems.removeClass('active');
+            carouselItems.slice(currentIndex, currentIndex + numVideos).addClass('active');
+          }
+        });
+    
+        carouselItems.slice(currentIndex, currentIndex + numVideos).addClass('active');
+      });
+</script>
+
+
+<footer class="footer">
+  <div class="container" style="text-align: left;">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            Website content is licensed under a <a rel="license"
+                                                href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative
+            Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            Website source code based on the <a href="https://nerfies.github.io/"> Nerfies</a> project page, <a href="https://doubiiu.github.io/projects/DynamiCrafter/#comparison_with_baseline_container"> DynamiCrafter</a> project page and <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic-project-page-template</a>. Thanks to their website templates!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
