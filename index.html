@@ -77,13 +77,12 @@
                     <span>Ablation</span>
                     </a>
                 </span>
-                <span class="link-block">
+                <!-- <span class="link-block">
                   <a href="#process"
                   class="external-link button is-normal is-rounded">
-
                   <span>Intermediate Results</span>
                   </a>
-                </span>
+                </span> -->
                 <span class="link-block">
                   <a href="#unconditional"
                   class="external-link button is-normal is-rounded">
@@ -164,9 +163,9 @@ We train our framework on a novel animation video dataset comprising more than 5
         <tr>
           <th style="font-size: 16px">Input</th>
           <th style="font-size: 16px">Ours</th>
-          <th style="font-size: 16px">MotionCtrl</th>
-          <th style="font-size: 16px">DragNUWA</th>
-          <th style="font-size: 16px">Motion-I2V</th>
+          <th style="font-size: 16px">MotionCtrl <br/> (Finetuned)</th>
+          <th style="font-size: 16px">DragNUWA<br/> (Finetuned)</th>
+          <th style="font-size: 16px">Motion-I2V<br/> (Finetuned)</th>
         </tr>
         
         <tr>
@@ -221,7 +220,7 @@ We train our framework on a novel animation video dataset comprising more than 5
           <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/16.mp4" autoplay loop controls muted/></th>
         </tr>
         <tr>
-          <th colspan="5" style="font-size: 14px; "><i>A cartoon character holding a piece of paper</i></th>
+          <th colspan="5" style="font-size: 14px; "><i>A cartoon character like a piece of paper</i></th>
         </tr>
 
         <tr>
@@ -345,6 +344,72 @@ We train our framework on a novel animation video dataset comprising more than 5
           <th colspan="5" style="font-size: 14px; "><i>A cartoon of a woman holding a sword in front of a dragon</i></th>
         </tr>
 
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_26.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/26.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/26.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/26.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/26.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A woman in a hat and dress walking along a field</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_269.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/269.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/269.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/269.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/269.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A woman with black hair and green eyes talking on a cell phone</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_2025-03-12T20-20-44.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/2025-03-12T20-20-44.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl/2025-03-12T20-20-44.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa/2025-03-12T20-20-44.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V/2025-03-12T20-20-44.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>A sketch of a girl looking to the left.</i></th>
+        </tr>
+
+
+        <tr>
+          <th colspan="5" style="font-size: 20px; padding-top: 4em !important;">Comparison with vanilla competitor models</th>
+        </tr>
+        <tr>
+          <th style="font-size: 16px">Input</th>
+          <th style="font-size: 16px">Ours</th>
+          <th style="font-size: 16px">MotionCtrl <br/> (Vanilla)</th>
+          <th style="font-size: 16px">DragNUWA<br/> (Vanilla)</th>
+          <th style="font-size: 16px">Motion-I2V<br/> (Vanilla)</th>
+        </tr>
+        
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_660.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/660.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl_vanilla/660.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa_vanilla/660.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V_vanilla/660.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>a young man holding a gun in the snow</i></th>
+        </tr>
+
+        <tr>
+          <th><img class="input_image_comparison" src="assets/webpage_vids_vistraj/traj_with_mask_855.png"/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/ours/855.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionctrl_vanilla/855.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/dragnuwa_vanilla/855.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_comparison" src="assets/webpage_vids_vistraj/motionI2V_vanilla/855.mp4" autoplay loop controls muted/></th>
+        </tr>
+        <tr>
+          <th colspan="5" style="font-size: 14px; "><i>an anime scene with a sky full of stars</i></th>
+        </tr>
       </tbody>
     </table>
   </section>
@@ -364,27 +429,15 @@ We train our framework on a novel animation video dataset comprising more than 5
           <th style="font-size: 16px">Ours Full</th>
           <th style="font-size: 16px">W/o SAM</th>
           <th style="font-size: 16px">W/o traj pos embedding</th>
-          <th style="font-size: 16px">Second Stage Only</th>
-          <th style="font-size: 16px">FFT representation <br/> (E.g., Generative Image Dynamics)</th>
+          <th style="font-size: 16px">Predicting Optical Flow <br/> in Stage 1</th>
+          <th style="font-size: 16px"> Predicting 4D Motion Volume (e.g., Generative Image Dynamics) <br/> in Stage 1</th>
         </tr>
-        <tr>
-          <th><img class="input_image_ablation" src="assets/webpage_vids_vistraj/traj_with_mask_00.png"/></th>
-          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/ours/00.mp4" autoplay loop controls muted/></th>
-          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wosam/00.mp4" autoplay loop controls muted/></th>
-          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wotrajcond/00.mp4" autoplay loop controls muted/></th>
-          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/motionctrl/00.mp4" autoplay loop controls muted/></th>
-          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_fft/00.mp4" autoplay loop controls muted/></th>
-        </tr>
-        <tr>
-          <th colspan="6" style="font-size: 14px; "><i>A cartoon of a man and a cow</i></th>
-        </tr>
-
         <tr>
           <th><img class="input_image_ablation" src="assets/webpage_vids_vistraj/traj_with_mask_11.png"/></th>
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/ours/11.mp4" autoplay loop controls muted/></th>
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wosam/11.mp4" autoplay loop controls muted/></th>
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wotrajcond/11.mp4" autoplay loop controls muted/></th>
-          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/motionctrl/11.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/flowpred_ablation/11.mp4" autoplay loop controls muted/></th>
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_fft/11.mp4" autoplay loop controls muted/></th>
         </tr>
         <tr>
@@ -396,11 +449,11 @@ We train our framework on a novel animation video dataset comprising more than 5
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/ours/16.mp4" autoplay loop controls muted/></th>
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wosam/16.mp4" autoplay loop controls muted/></th>
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wotrajcond/16.mp4" autoplay loop controls muted/></th>
-          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/motionctrl/16.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/flowpred_ablation/16.mp4" autoplay loop controls muted/></th>
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_fft/16.mp4" autoplay loop controls muted/></th>
         </tr>
         <tr>
-          <th colspan="6" style="font-size: 14px; "><i>A cartoon character holding a piece of paper</i></th>
+          <th colspan="6" style="font-size: 14px; "><i>A cartoon character like a piece of paper</i></th>
         </tr>
 
         <tr>
@@ -408,7 +461,7 @@ We train our framework on a novel animation video dataset comprising more than 5
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/ours/17.mp4" autoplay loop controls muted/></th>
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wosam/17.mp4" autoplay loop controls muted/></th>
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_wotrajcond/17.mp4" autoplay loop controls muted/></th>
-          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/motionctrl/17.mp4" autoplay loop controls muted/></th>
+          <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/flowpred_ablation/17.mp4" autoplay loop controls muted/></th>
           <th><video  class="input_image_ablation" src="assets/webpage_vids_vistraj/comparision_fft/17.mp4" autoplay loop controls muted/></th>
         </tr>
         <tr>
@@ -422,43 +475,6 @@ We train our framework on a novel animation video dataset comprising more than 5
 
 
   <!-- Results Part3: process -->
-  <section class="section hero">
-    <!------------------ BEGIN SECTION ------------------>
-    <!-- <p>&nbsp;</p> -->
-    <!-- <hr> -->
-    <h2 class="title is-3" id="process" align="center">Intermediate Results</h2>
-
-    <table width="1000" align="center" style="margin-top: 30px;">
-      <tbody>
-        <tr>
-          <th style="font-size: 16px;">Input</th>
-          <th style="font-size: 16px">First Stage Predicted Motion</th>
-          <th style="font-size: 16px">Warped Frames</th>
-          <th style="font-size: 16px">Final Output</th>
-        </tr>
-        <tr>
-          <th><img class="input_image_intermediate" src="assets/webpage_vids_vistraj/traj_with_mask_00.png"/></th>
-          <th><video  class="input_image_intermediate" src="assets/intermediates/00_pred_motion.mp4" autoplay loop controls muted/></th>
-          <th><video  class="input_image_intermediate" src="assets/intermediates/00_warped.mp4" autoplay loop controls muted/></th>
-          <th><video  class="input_image_intermediate" src="assets/webpage_vids_vistraj/ours/00.mp4" autoplay loop controls muted/></th>
-        </tr>
-        <tr>
-          <th colspan="4" style="font-size: 14px; "><i>A cartoon of a man and a cow</i></th>
-        </tr>
-
-        <tr>
-          <th><img class="input_image_intermediate" src="assets/webpage_vids_vistraj/traj_with_mask_11.png"/></th>
-          <th><video  class="input_image_intermediate" src="assets/intermediates/11_pred_motion.mp4" autoplay loop controls muted/></th>
-          <th><video  class="input_image_intermediate" src="assets/intermediates/11_warped.mp4" autoplay loop controls muted/></th>
-          <th><video  class="input_image_intermediate" src="assets/webpage_vids_vistraj/ours/11.mp4" autoplay loop controls muted/></th>
-        </tr>
-        <tr>
-          <th colspan="4" style="font-size: 14px; "><i>A girl in a white shirt standing next to a ladder</i></th>
-        </tr>
-
-      </tbody>
-    </table>
-  </section>
   <!-- End Results Part3-->
 
   <!-- Results Part4: unconditional -->
